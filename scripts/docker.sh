@@ -24,6 +24,12 @@ NTPPOOLZONE="time.stdtime.gov.tw"
 PACKAGES_LIST="
 unzip
 curl
+git
+php7.0
+php7.0-mbstring
+php7.0-curl
+php7.0-xml
+php7.0-mysql
 "
 
 PACKAGES=""
@@ -41,10 +47,19 @@ fi
 if [ ! -e ${INSTALLED} ];then
     touch ${INSTALLED}
 
-    # install general tools
+    # Add PHP 7.0 PPA
+    add-apt-repository -y ppa:ondrej/php
+
     apt-get update
+    apt-get remove php5-common -y
+
+    # install general tools
     apt-get -y install ${PACKAGES}
 
+
+    # download composer
+     curl -sS https://getcomposer.org/installer | php
+     mv composer.phar /usr/local/bin/composer
 
     # install Docker
     curl -sSL https://get.docker.com/ | sudo sh
@@ -53,7 +68,7 @@ if [ ! -e ${INSTALLED} ];then
     sudo usermod -aG docker vagrant
 
     # install Docker Compose
-    curl -L https://github.com/docker/compose/releases/download/$COMPOSE_VERSION/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+    curl -L "https://github.com/docker/compose/releases/download/${COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     chmod +x /usr/local/bin/docker-compose
 fi
 
