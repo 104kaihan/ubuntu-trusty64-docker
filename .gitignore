@@ -30,4 +30,7 @@ nbproject
 
 # Vagrant files
 .vagrant
-*.box
+*.ibox
+
+# project dir
+resume-exp
